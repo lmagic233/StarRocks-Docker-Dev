@@ -1,13 +1,13 @@
-FROM starrocks/dev-env-ubuntu:latest
+FROM starrocks/dev-env-ubuntu:3.2-latest
 
 RUN apt update && \
-    apt install -y openssh-server lsb-release wget software-properties-common gnupg && \
+    apt install -y openssh-server lsb-release wget software-properties-common gnupg vim && \
     wget https://apt.llvm.org/llvm.sh && \
     chmod +x llvm.sh && \
     ./llvm.sh 15 && \
-    echo "root:xxx" |chpasswd && \
+    echo "root:3897" |chpasswd && \
     sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    echo "port 2222" >> /etc/ssh/sshd_config && \
+    echo "Port 2222" >> /etc/ssh/sshd_config && \
     mkdir /var/run/sshd
 
 ENV STARROCKS_HOME ${starrockshome}
@@ -20,5 +20,6 @@ RUN echo "export STARROCKS_THIRDPARTY=/var/local/thirdparty" >> ~/.bashrc && \
     echo "handle SIGSEGV nostop noprint pass" >> ~/.gdbinit
 
 # Default ssh port is 2222, you can change it.
-EXPOSE 2222
+EXPOSE 22 80 443 2222 5005 5555 8001 8030 9020 9030 9060 8040 
 CMD ["/usr/sbin/sshd", "-D"]
+
